@@ -16,7 +16,7 @@
     "views": {
       "explorer": [
         {
-          "id": "TimeDisparity",
+          "id": "timedisparity",
           "name": "Time Disparity"
         }
       ]

@@ -1,3 +1,33 @@
 # Timedisparity
 
-first release, to be updated
+## ☄️ Overview
+The Time Disparity Reminder extension for Visual Studio Code helps you keep track of different time zones and reminds you of your friends' birthdays. You can easily see the current time in multiple locations and get notified of upcoming birthdays directly in your VSCode Explorer panel. Please don't forget your friends's birthday even if you are busy.
+
+## 🌠 Features
+- Display current time in specified time zones (Taipei, Sydney, London).
+- Add and manage friends' birthdays.
+- Highlight birthdays on the current date with a special icon.
+- Tooltip with detailed time information in each time zone.
+- Customizable through commands and context menus.
+
+## 🌌 Installation
+1. Open Visual Studio Code.
+2. Go to the Extensions view by clicking on the Extensions icon in the Activity Bar on the side of the window.
+3. Search for "TimeDisparity".
+4. Click Install.
+
+## 🔭 Usage
+Viewing Time Zones and Birthdays
+- Open the Explorer view in VSCode.
+- Find the "Time Disparity" section.
+- You will see the current time in Taipei, Sydney, and London.
+- If today is a friend's birthday, it will be highlighted with a gift icon.
+
+## 📓 Release Notes
+0.0.1
+- Initial release with basic functionality:
+Display current time in Taipei, Sydney, and London.
+
+0.0.2
+- Add and display birthdays.
+Highlight today's birthdays with a special icon.
