@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('timeExplorer.addBirthday', () => timeProvider.addBirthday());
 }
 
-class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | null | void> = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
@@ -71,7 +71,7 @@ class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     }
 }
 
-class BirthdayItem extends vscode.TreeItem {
+export class BirthdayItem extends vscode.TreeItem {
     constructor(public date: string, private timezone: string, public msg: string) {
         super(date);
         this.description = `${date}  ${msg}`;
@@ -81,7 +81,7 @@ class BirthdayItem extends vscode.TreeItem {
     }
 
     getTimeInTimeZone(): string {
-        return moment.tz(this.timezone).format('YYYY-MM-DD HH:mm:ss');
+        return moment.tz(this.timezone).format('YYYY-MM-DD HH:mm');
     }
 
     isToday(): boolean {
@@ -99,6 +99,6 @@ class TimezoneItem extends vscode.TreeItem {
     }
 
     getCurrentTime(): string {
-        return moment.tz(this.timezone).format('YYYY-MM-DD HH:mm:ss');
+        return moment.tz(this.timezone).format('YYYY-MM-DD HH:mm');
     }
 }
