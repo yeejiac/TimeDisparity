@@ -2,7 +2,7 @@
   "name": "timedisparity",
   "displayName": "TimeDisparity",
   "description": "The temporal distance that divides by regions.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "yeejiac",
   "engines": {
     "vscode": "^1.92.0"

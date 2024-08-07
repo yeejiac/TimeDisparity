@@ -2,7 +2,7 @@
 
 All notable changes to the "timedisparity" extension will be documented in this file.
 
-## [0.1.0]
+## [0.0.3]
 - Add MIT License
 - Add automation testing
 - Update important birthday
