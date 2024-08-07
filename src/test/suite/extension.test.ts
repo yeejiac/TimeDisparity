@@ -29,7 +29,7 @@ suite('Extension Test Suite', () => {
 
     test('BirthdayItem - isToday', () => {
         const today = moment.tz().format('MM-DD');
-        const birthdayItem = new myExtension.BirthdayItem(today, 'Asia/Taipei', 'Test');
+        const birthdayItem = new myExtension.BirthdayItem('name', today, 'Asia/Taipei', 'Test');
 
         assert.strictEqual(birthdayItem.isToday(), true, 'BirthdayItem should recognize today as the birthday');
     });

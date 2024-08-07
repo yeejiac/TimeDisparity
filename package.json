@@ -34,8 +34,28 @@
       {
         "command": "extension.showTime",
         "title": "Show Time"
+      },
+      {
+        "command": "timedisparity.addBirthday",
+        "title": "Add Birthday"
+      },
+      {
+        "command": "timedisparity.addTimeZone",
+        "title": "Add TimeZone"
       }
-    ]
+    ],
+    "menus": {
+        "view/title": [
+            {
+                "command": "timedisparity.addBirthday",
+                "title": "Add Birthday"
+            },
+            {
+              "command": "timedisparity.addTimeZone",
+              "title": "Add TimeZone"
+            }
+        ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -58,5 +78,7 @@
   },
   "dependencies": {
     "moment-timezone": "^0.5.45"
-  }
+  },
+  "license": "MIT",
+  "icon": "icon.png"
 }

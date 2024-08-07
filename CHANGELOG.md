@@ -5,6 +5,8 @@ All notable changes to the "timedisparity" extension will be documented in this 
 ## [0.1.0]
 - Add MIT License
 - Add automation testing
+- Update important birthday
+- Complete Add birthday and time zone functionality
 
 ## [0.0.2]
 - Add and display birthdays. Highlight today's birthdays with a special icon.

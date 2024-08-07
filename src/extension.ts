@@ -5,11 +5,12 @@ export function activate(context: vscode.ExtensionContext) {
     const timeProvider = new TimeProvider();
     vscode.window.registerTreeDataProvider('timedisparity', timeProvider);
 
-    vscode.commands.registerCommand('timeExplorer.refresh', () => timeProvider.refresh());
-    vscode.commands.registerCommand('timeExplorer.addBirthday', () => timeProvider.addBirthday());
+    vscode.commands.registerCommand('timedisparity.refresh', () => timeProvider.refresh());
+    vscode.commands.registerCommand('timedisparity.addBirthday', () => timeProvider.addBirthday());
+    vscode.commands.registerCommand('timedisparity.addTimeZone', () => timeProvider.addTimeZone());
 }
 
-export class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+    export class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | null | void> = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
@@ -24,13 +25,32 @@ export class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
         ];
 
         this.birthdays = [
-            new BirthdayItem('08-07', 'Asia/Taipei', 'Happy International Day of Peace!'),
-            new BirthdayItem('08-06', 'Australia/Sydney', 'Happy International Day of Peace!')
+            new BirthdayItem('A', '05-23', 'Asia/Taipei', 'https://open.spotify.com/track/4uvARnZIajUDXWXPifhK3B?si=bfbf77be2bad41d7'),
+            new BirthdayItem('B', '08-21', 'Australia/Sydney', 'Happy International Day of Peace!🧸'),
+            new BirthdayItem('C', '08-01', 'Asia/Taipei', 'Happy International Day of Peace!🧢'),
+            new BirthdayItem('D', '04-14', 'Asia/Taipei', 'Happy International Day of Peace!🐥'),
+            new BirthdayItem('E', '05-24', 'Asia/Taipei', 'Happy International Day of Peace!🐠'),
+            new BirthdayItem('F', '10-25', 'Asia/Taipei', 'Happy International Day of Peace!🪼'),
+            new BirthdayItem('Test', '08-07', 'Asia/Taipei', 'Happy International Day of Peace!🪼')
         ];
     }
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
+    }
+
+    addTimeZone(): void {
+        // Prompt for new birthday details
+        vscode.window.showInputBox({ prompt: 'Enter City' }).then(label => {
+            if (label) {
+                vscode.window.showInputBox({ prompt: 'Enter timezone' }).then(timezone => {
+                    if (timezone) {
+                        this.timezones.push(new TimezoneItem(label, timezone));
+                        this.refresh();
+                    }
+                });
+            }
+        });
     }
 
     addBirthday(): void {
@@ -41,7 +61,7 @@ export class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
                     if (date) {
                         vscode.window.showInputBox({ prompt: 'Enter timezone' }).then(timezone => {
                             if (timezone) {
-                                this.birthdays.push(new BirthdayItem(date, timezone, 'msg'));
+                                this.birthdays.push(new BirthdayItem(name, date, timezone, 'msg'));
                                 this.refresh();
                             }
                         });
@@ -58,9 +78,8 @@ export class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     getChildren(element?: vscode.TreeItem): Thenable<vscode.TreeItem[]> {
         if (!element) {
             const items: vscode.TreeItem[] = [...this.timezones];
-            const today = moment.tz().format('MM-DD');
             for (const birthday of this.birthdays) {
-                if (birthday.date === today) {
+                if (birthday.isToday()) {
                     items.push(birthday);
                 }
             }
@@ -72,8 +91,8 @@ export class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 }
 
 export class BirthdayItem extends vscode.TreeItem {
-    constructor(public date: string, private timezone: string, public msg: string) {
-        super(date);
+    constructor(public name: string, public date: string, private timezone: string, public msg: string) {
+        super('');
         this.description = `${date}  ${msg}`;
         this.tooltip = `Date: ${date}\nTime in ${timezone}: ${this.getTimeInTimeZone()}`;
         this.contextValue = 'birthdayItem';
@@ -81,7 +100,7 @@ export class BirthdayItem extends vscode.TreeItem {
     }
 
     getTimeInTimeZone(): string {
-        return moment.tz(this.timezone).format('YYYY-MM-DD HH:mm');
+        return moment.tz(this.timezone).format('YYYY-MM-DD HH:mm:ss');
     }
 
     isToday(): boolean {
