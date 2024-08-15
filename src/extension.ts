@@ -7,7 +7,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('timedisparity.refresh', () => timeProvider.refresh());
     vscode.commands.registerCommand('timedisparity.addBirthday', () => timeProvider.addBirthday());
-    vscode.commands.registerCommand('timedisparity.addTimeZone', () => timeProvider.addTimeZone());
+    if(true) {
+        vscode.commands.registerCommand('timedisparity.addTimeZone', () => timeProvider.addTimeZone());
+        vscode.commands.registerCommand('timedisparity.removeTimezone', (timezoneItem: TimezoneItem) => timeProvider.removeTimezone(timezoneItem));
+    }
+
+    
 }
 
     class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
@@ -76,8 +81,14 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     removeTimezone(timezoneItem: TimezoneItem): void {
-        this.timezones = this.timezones.filter(tz => tz.timezone !== timezoneItem.timezone);
-        this.refresh();
+        // this.timezones = this.timezones.filter(tz => tz.timezone !== timezoneItem.timezone);
+        // this.refresh();
+        const index = this.timezones.findIndex(tz => tz.timezone === timezoneItem.timezone);
+        if (index !== -1) {
+            this.timezones.splice(index, 1);
+            this.refresh();
+            vscode.window.showInformationMessage(`Timezone '${timezoneItem.timezone}' removed successfully.`);
+        }
     }
 
     addBirthday(): void {
@@ -160,9 +171,13 @@ class BirthdayItem extends vscode.TreeItem {
 class TimezoneItem extends vscode.TreeItem {
     constructor(public label: string, public timezone: string) {
         super(label);
-        this.description = this.getCurrentTime();
-        this.tooltip = `Current time in ${timezone}: ${this.getCurrentTime()}`;
-        this.contextValue = 'timezoneItem';
+        this.updateTime();
+
+        this.command = {
+            command: 'timedisparity.removeTimezone',
+            title: 'Remove Timezone',
+            arguments: [this.timezone]  // Pass only the timezone string
+        };
     }
 
     getCurrentTime(): string {

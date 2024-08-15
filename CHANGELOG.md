@@ -5,6 +5,7 @@ All notable changes to the "timedisparity" extension will be documented in this 
 ## [0.0.4]
 - Fix time not update issue
 - Make add timezone and add birthday optional rather than require to type the word
+- Add remove timezone functionality
 
 ## [0.0.3]
 - Add MIT License

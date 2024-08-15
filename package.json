@@ -42,6 +42,10 @@
       {
         "command": "timedisparity.addTimeZone",
         "title": "Add TimeZone"
+      },
+      {
+          "command": "timedisparity.removeTimezone",
+          "title": "Remove Timezone"
       }
     ],
     "menus": {
@@ -53,6 +57,10 @@
             {
               "command": "timedisparity.addTimeZone",
               "title": "Add TimeZone"
+            },
+            {
+              "command": "timedisparity.removeTimezone",
+              "title": "Remove Timezone"
             }
         ]
     }
