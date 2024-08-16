@@ -12,8 +12,61 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('timedisparity.removeTimezone', (timezoneItem: TimezoneItem) => timeProvider.removeTimezone(timezoneItem));
     }
 
+    const uriProvider = new UriProvider();
+    let disposable = vscode.commands.registerCommand('extension.generateUri', () => {
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+          const document = editor.document;
+          const filePath = document.uri.fsPath;
+          const line = editor.selection.active.line + 1;
+          const column = editor.selection.active.character + 1;
     
+          const uri = `vscode://file/${filePath}:${line}:${column}`;
+          vscode.env.clipboard.writeText(uri);
+          vscode.window.showInformationMessage(`URI copied to clipboard: ${uri}`);
+          uriProvider.addUri(uri);
+        } else {
+          vscode.window.showErrorMessage('No active editor found');
+        }
+      });
+
+      vscode.window.registerTreeDataProvider('uriView', uriProvider);
+    
+      context.subscriptions.push(disposable);
 }
+
+class UriProvider implements vscode.TreeDataProvider<string> {
+    private _onDidChangeTreeData: vscode.EventEmitter<string | undefined | void> = new vscode.EventEmitter<string | undefined | void>();
+    readonly onDidChangeTreeData: vscode.Event<string | undefined | void> = this._onDidChangeTreeData.event;
+  
+    private uris: string[] = [];
+  
+    getTreeItem(element: string): vscode.TreeItem {
+      return {
+        label: element,
+        command: {
+          command: 'vscode.open',
+          title: 'Open File',
+          arguments: [vscode.Uri.parse(element)]
+        },
+        tooltip: element
+      };
+    }
+  
+    getChildren(): string[] {
+      return this.uris;
+    }
+  
+    addUri(uri: string): void {
+      this.uris.push(uri);
+      this._onDidChangeTreeData.fire();
+    }
+  
+    clearUris(): void {
+      this.uris = [];
+      this._onDidChangeTreeData.fire();
+    }
+  }
 
     class TimeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | null | void> = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();

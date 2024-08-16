@@ -2,6 +2,9 @@
 
 All notable changes to the "timedisparity" extension will be documented in this file.
 
+## [0.0.5]
+- Add code bookmark functionality
+
 ## [0.0.4]
 - Fix time not update issue
 - Make add timezone and add birthday optional rather than require to type the word
