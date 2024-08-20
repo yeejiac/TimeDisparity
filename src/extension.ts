@@ -187,7 +187,7 @@ class UriProvider implements vscode.TreeDataProvider<string> {
             const items: vscode.TreeItem[] = [...this.timezones];
             const today = moment.tz().format('MM-DD');
             for (const birthday of this.birthdays) {
-                if (birthday.date === today) {
+                if (birthday.isToday()) {
                     items.push(birthday);
                 }
             }
