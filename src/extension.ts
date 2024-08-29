@@ -16,18 +16,33 @@ export function activate(context: vscode.ExtensionContext) {
     let disposable = vscode.commands.registerCommand('extension.generateUri', () => {
         const editor = vscode.window.activeTextEditor;
         if (editor) {
-          const document = editor.document;
-          const filePath = document.uri.fsPath;
-          const line = editor.selection.active.line + 1;
-          const column = editor.selection.active.character + 1;
-    
-          const uri = `vscode://file/${filePath}:${line}:${column}`;
-          vscode.env.clipboard.writeText(uri);
-          vscode.window.showInformationMessage(`URI copied to clipboard: ${uri}`);
-          uriProvider.addUri(uri);
-        } else {
-          vscode.window.showErrorMessage('No active editor found');
-        }
+            const document = editor.document;
+            const filePath = document.uri.fsPath;
+            const line = editor.selection.active.line + 1;
+            const column = editor.selection.active.character + 1;
+            let uri: string;
+            if (vscode.env.remoteName) {
+                // If running in a remote environment, handle the URI accordingly
+                switch (vscode.env.remoteName) {
+                    case 'wsl':
+                    case 'ssh-remote':
+                    case 'dev-container':
+                        uri = `${filePath}:${line}:${column}`;
+                        break;
+                    default:
+                        uri = `vscode://file/${filePath}:${line}:${column}`;
+                        break;
+                }
+            } else {
+                // Local environment
+                uri = `vscode://file/${filePath}:${line}:${column}`;
+            }
+            vscode.env.clipboard.writeText(uri);
+            vscode.window.showInformationMessage(`URI copied to clipboard: ${uri}`);
+            uriProvider.addUri(uri);
+            } else {
+            vscode.window.showErrorMessage('No active editor found');
+            }
       });
 
       vscode.window.registerTreeDataProvider('uriView', uriProvider);
@@ -40,17 +55,31 @@ class UriProvider implements vscode.TreeDataProvider<string> {
     readonly onDidChangeTreeData: vscode.Event<string | undefined | void> = this._onDidChangeTreeData.event;
   
     private uris: string[] = [];
-  
-    getTreeItem(element: string): vscode.TreeItem {
-      return {
-        label: element,
-        command: {
-          command: 'vscode.open',
-          title: 'Open File',
-          arguments: [vscode.Uri.parse(element)]
-        },
-        tooltip: element
-      };
+
+    getTreeItem(element: string): vscode.TreeItem{
+        const regex = /^(.*):(\d+):(\d+)$/;
+        const match = element.match(regex);
+    
+        if (match) {
+            const filePath = match[1];
+            const line = parseInt(match[2]);
+            const column = parseInt(match[3]);
+    
+            const fileUri = vscode.Uri.file(filePath);
+    
+            return {
+                label: `${filePath}:${line}:${column}`,
+                command: {
+                    command: 'vscode.open',
+                    title: 'Open File',
+                    arguments: [fileUri, { selection: new vscode.Range(line - 1, column - 1, line - 1, column - 1) }]
+                },
+                tooltip: `File: ${filePath}, Line: ${line}, Column: ${column}`
+            };
+        } else {
+            vscode.window.showWarningMessage(`Invalid format: "${element}". Expected format: "/path/to/file:line:column".`);
+            return new vscode.TreeItem('Invalid URI Format');
+        }
     }
   
     getChildren(): string[] {
