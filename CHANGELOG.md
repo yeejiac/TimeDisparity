@@ -2,6 +2,12 @@
 
 All notable changes to the "timedisparity" extension will be documented in this file.
 
+## [0.0.7]
+- Fix bookmark functionality not working in wsl and linux environment
+
+## [0.0.6]
+- Quick fix for birthday checking
+
 ## [0.0.5]
 - Add code bookmark functionality
 

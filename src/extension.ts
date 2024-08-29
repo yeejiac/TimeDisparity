@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             } else {
                 // Local environment
-                uri = `vscode://file/${filePath}:${line}:${column}`;
+                uri = `${filePath}:${line}:${column}`;
             }
             vscode.env.clipboard.writeText(uri);
             vscode.window.showInformationMessage(`URI copied to clipboard: ${uri}`);
