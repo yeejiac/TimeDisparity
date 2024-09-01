@@ -58,22 +58,41 @@
       {
         "command": "extension.generateUri",
         "title": "Generate VSCode URI"
+      },
+      {
+        "command": "extension.removeUri",
+        "title": "Remove VSCode URI"
       }
     ],
     "menus": {
         "view/title": [
             {
                 "command": "timedisparity.addBirthday",
+                "when": "view == timedisparity",
                 "title": "Add Birthday"
             },
             {
               "command": "timedisparity.addTimeZone",
+              "when": "view == timedisparity",
               "title": "Add TimeZone"
             },
             {
               "command": "timedisparity.removeTimezone",
+              "when": "view == timedisparity",
               "title": "Remove Timezone"
+            },
+            {
+              "command": "extension.removeUri",
+              "when": "view == uriView",
+              "title": "Remove Uri"
             }
+        ],
+        "view/item/context": [
+        {
+          "command": "extension.removeUri",
+          "when": "view == uriView",
+          "group": "inline"
+        }
         ],
         "editor/context": [
         {

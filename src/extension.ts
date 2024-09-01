@@ -43,11 +43,11 @@ export function activate(context: vscode.ExtensionContext) {
             } else {
             vscode.window.showErrorMessage('No active editor found');
             }
-      });
+    });
 
-      vscode.window.registerTreeDataProvider('uriView', uriProvider);
-    
-      context.subscriptions.push(disposable);
+    vscode.window.registerTreeDataProvider('uriView', uriProvider);
+    vscode.commands.registerCommand('extension.removeUri', (uris: string) => uriProvider.removeUri(uris));
+    context.subscriptions.push(disposable);
 }
 
 class UriProvider implements vscode.TreeDataProvider<string> {
@@ -94,6 +94,20 @@ class UriProvider implements vscode.TreeDataProvider<string> {
     clearUris(): void {
       this.uris = [];
       this._onDidChangeTreeData.fire();
+    }
+
+    refresh(): void {
+        console.log('UriProvider is refreshing...');
+        this._onDidChangeTreeData.fire();
+    }
+
+    removeUri(uris: string): void {
+        const index = this.uris.findIndex(link => link === uris);
+        if (index !== -1) {
+            this.uris.splice(index, 1);
+            this.refresh();
+            vscode.window.showInformationMessage(`Uris removed successfully.`);
+        }
     }
   }
 
